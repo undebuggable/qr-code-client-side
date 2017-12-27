@@ -3,19 +3,24 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width" />
-        <link href="styles.css" rel="stylesheet" type="text/css" media="all">
+        <link href="styles/qr.css" rel="stylesheet" type="text/css" media="all">
+        <!--<link href="qr.css" rel="stylesheet" type="text/css" media="all">-->
         <title>Client-side QR code gerenation</title>
 	</head>
 	<body>
-		<form>
-			<textarea id="" name="msg" rows="20" cols="50"></textarea>
+        <label for="qr-value">
+            Generate QR code entirely on the client side, in the web browser.
+        </label>
+		<form id="qr-form">
+			<textarea id="qr-value" rows="20" cols="50"></textarea>
 			<br>
-			<input type="submit" value="Generate QR code">
-			<div id="qr"></div>
+			<input id="qr-submit" type="submit" value="Generate QR code">
+			<div id="qr-code"></div>
 		</form>
 
         <script type="text/javascript" src="src/qr-generator.js"></script>
+        <script type="text/javascript" src="src/qr-config.js"></script>
         <script type="text/javascript" src="src/qr-app.js"></script>
-        <!--<script type="text/javascript" src=""></script>-->
+        <!--<script type="text/javascript" src="qr.js"></script>-->
     </body>
 </html>
