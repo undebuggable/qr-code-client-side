@@ -13,10 +13,12 @@ module.exports = function(grunt) {
                 //src: ['client/**/*.js'],
                 src: [
                     'src/qr-generator.js',
+                    'src/qr-config.js',
                     'src/qr-app.js'
                 ],
                 // the location of the resulting JS file
-                dest: 'static/<%= pkg.name %>.concat.js'
+                //dest: 'static/<%= pkg.name %>.concat.js'
+                dest: 'qr.max.js'
             }
         },
          uglify: {
@@ -25,7 +27,8 @@ module.exports = function(grunt) {
              },
              dist: {
                  files: {
-                     'static/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+                     //'static/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+                     'qr.js': ['<%= concat.dist.dest %>']
                  }
              }
          },
@@ -36,7 +39,6 @@ module.exports = function(grunt) {
              options: {
                  // more options here if you want to override JSHint defaults
                  globals: {
-                     jQuery: true,
                      console: true,
                      module: true
                  }
