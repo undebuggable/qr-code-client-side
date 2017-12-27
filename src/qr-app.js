@@ -5,7 +5,7 @@
         location = window.location,
         elemForm = document.getElementById('qr-form'),
         elemQRCode = elemForm.querySelector('#qr-code'),
-        elemValue =  elemForm.querySelector('#qr-value')
+        elemValue =  elemForm.querySelector('#qr-value'),
         hashString = location.hash.replace(/^\s\s*/, '').replace(/\s\s*$/, '').slice(1),
         validParameters = {}
     ;
@@ -18,6 +18,7 @@
             limit = 0,
             textLength = Infinity
         ;
+        //debugger;
         //[TODO] Calculate the length, don't rely on exception
         try {
             qr = qrcode(typeNumber, CONFIG_DEFAULT_CORRECTION);
@@ -104,18 +105,20 @@
         console.log('QR code configuration\n' + JSON.stringify(validParameters));
         return validParameters;
     };
+    function onQRSubmit (e) {
+        e.preventDefault();
+        //debugger;
+        var text = elemValue.value.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        if (text.length > 0) {
+            location.hash = encodeURIComponent(text);
+            elemQRCode.innerHTML = createQRCode(text);
+        }
+    };
     (function init() {
+        //debugger;
         parseFragment(hashString);
         elemValue.value = validParameters.value;
         updateQRCode();
-        elemForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            debugger;
-            var text = elemValue.value.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            if (text.length > 0) {
-                location.hash = encodeURIComponent(text);
-                elemQRCode.innerHTML = createQRCode(text);
-            }
-        });
+        elemForm.addEventListener('submit', onQRSubmit, false);
     })();
 })(window);

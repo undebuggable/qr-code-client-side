@@ -1,1 +1,2 @@
 • use ES6 modules
+• fix parsing and support for parameters in URL fragment

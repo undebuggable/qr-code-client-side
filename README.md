@@ -19,4 +19,4 @@ An example URL the this application with all parameters:
 
 [https://ow.cx/static/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side](https://ow.cx/static/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side)
 
-Note that all parameters are given in URL fragment, thus handled entirely in the browser, i.e. the value to encode is not logged in the server logs.
+Note that all parameters are given in URL fragment, thus handled entirely in the web browser i.e. the value to encode is not logged in the server logs.
