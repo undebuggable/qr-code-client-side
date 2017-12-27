@@ -12,9 +12,8 @@ module.exports = function(grunt) {
                 // the files to concatenate
                 //src: ['client/**/*.js'],
                 src: [
-                    'client/analyze-dom-config.js',
-                    'client/analyze-dom-ui.js',
-                    'client/analyze-dom-app.js'
+                    'src/qr-generator.js',
+                    'src/qr-app.js'
                 ],
                 // the location of the resulting JS file
                 dest: 'static/<%= pkg.name %>.concat.js'
@@ -22,7 +21,7 @@ module.exports = function(grunt) {
         },
          uglify: {
              options: {
-                 banner: '/*Paweł Owczarek*/\n/*Analyze DOM*/\n/*<%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>*/\n'
+                 banner: '/*Paweł Owczarek*/\n/*Client side QR codes*/\n/*<%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>*/\n'
              },
              dist: {
                  files: {
@@ -32,7 +31,7 @@ module.exports = function(grunt) {
          },
          jshint: {
              // define the files to lint
-             files: ['Gruntfile.js', 'client/**/*.js', 'server/**/*.js'],
+             files: ['Gruntfile.js', 'src/**/*.js'],
              // configure JSHint (documented at http://www.jshint.com/docs/)
              options: {
                  // more options here if you want to override JSHint defaults
