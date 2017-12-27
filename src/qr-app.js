@@ -1,45 +1,26 @@
 (function init (_window) {
-
     var
         window = _window,
         document = window.document,
-        errorCorrectLevel = 'L',
-        pixelSize = 5,
-        qr_element = document.getElementById('qr'),
-        hashString = location.hash.replace(/^\s\s*/, '').replace(/\s\s*$/, ''),
-        capacity = [
-            //index + 1 == version
-            //[L, M, Q, H]
-            [152,128,104,72],[],[],[],
-            [864,688,496,368],[],[],
-            [1552,1232,880,688],[],
-            [2192,1728,1232,976],[],[],
-            [3424,2672,1952,1440],[],
-            [4184,3320,2360,1784],[],[],
-            [5768,4504,3176,2504],[],
-            [6888,5352,3880,3080],[],[],
-            [8752,6880,4912,3712],[],
-            [10208,8000,5744,4304],[],[],
-            [],[],
-            [13880,10984,7880,5960],[],[],
-            [],[],
-            [18448,14496,10288,7888],[],[],
-            [],[],
-            [23648,18672,13328,10208]
-        ]
+        location = window.location,
+        elemForm = document.getElementById('qr-form'),
+        elemQRCode = elemForm.querySelector('#qr-code'),
+        elemValue =  elemForm.querySelector('#qr-value')
+        hashString = location.hash.replace(/^\s\s*/, '').replace(/\s\s*$/, '').slice(1),
+        validParameters = {}
     ;
-    function create_qrcode (text) {
+    function createQRCode (text) {
         var
             qr,
-        //Value is selected automatically
+            //Value is selected automatically
             typeNumber = 1,
             success = false,
             limit = 0,
             textLength = Infinity
-            ;
+        ;
         //[TODO] Calculate the length, don't rely on exception
         try {
-            qr = qrcode(typeNumber, errorCorrectLevel);
+            qr = qrcode(typeNumber, CONFIG_DEFAULT_CORRECTION);
             qr.addData(unescape("%EF%BB%BF"));
             qr.addData(unescape(encodeURIComponent(text)));
             qr.make();
@@ -48,38 +29,92 @@
             textLength = +m[0].split('(')[1];
             limit = +m[1].split(')')[0]
         };
-        var allowed = capacity.filter(function(c) {
-            var max = c[['L', 'M', 'H', 'Q'].indexOf(errorCorrectLevel)];
+        var allowed = CAPACITY.filter(function(c) {
+            var max = c[['L', 'M', 'H', 'Q'].indexOf(CONFIG_DEFAULT_CORRECTION)];
             return textLength < max;
         });
         if (allowed.length) {
             qr = qrcode(
-                capacity.indexOf(allowed[0]) + 1,
-                errorCorrectLevel
+                CAPACITY.indexOf(allowed[0]) + 1,
+                CONFIG_DEFAULT_CORRECTION
             );
             qr.addData(unescape("%EF%BB%BF"));
             qr.addData(unescape(encodeURIComponent(text)));
             qr.make();
         };
-        return !!qr ? qr.createImgTag(pixelSize) : '';
+        return !!qr ? qr.createImgTag(CONFIG_DEFAULT_PIXEL) : '';
     };
-    function update_qrcode () {
-        var text = document.forms[0].elements['msg'].value.replace(/^[\s\u3000]+|[\s\u3000]+$/g, '');
-        document.getElementById('qr').innerHTML = create_qrcode(text);
+    function updateQRCode () {
+        var text = elemValue.value.replace(/^[\s\u3000]+|[\s\u3000]+$/g, '');
+        elemQRCode.innerHTML = createQRCode(text);
+    };
+    function parseFragment (hashString) {
+        var
+            allowedParameters = [
+                CONFIG_PIXEL, CONFIG_CORRECTION, CONFIG_VALUE
+            ],
+            fragmentParameters = hashString.split('&').map(function (parameter) {
+                var
+                    param = parameter.split('='),
+                    paramIndex = allowedParameters.indexOf(param[0].toLowerCase())
+                ;
+                return (
+                    ~paramIndex ? [param[0].toLowerCase(), decodeURIComponent(param[1])] : null
+                );
+            })
+        ;
+        fragmentParameters.forEach(function (parameter) {
+            if (parameter == null) return;
+            var paramIndex = allowedParameters.indexOf(parameter[0]);
+            switch (paramIndex) {
+                case 0:
+                    if (
+                        VALIDATE_PIXEL.test(parameter[1])
+                    ) validParameters[CONFIG_PIXEL] = +parameter[1];
+                    break;
+                case 1:
+                    if (
+                        VALIDATE_CORRECTION.test(parameter[1].toUpperCase())
+                    ) validParameters[CONFIG_CORRECTION] = parameter[1].toUpperCase();
+                    break;
+                case 2:
+                    if (
+                        //VALIDATE_VALUE.test(parameter[1])
+                        parameter[1].length >= VALIDATE_VALUE_MIN &&
+                        parameter[1].length <= VALIDATE_VALUE_MAX
+                    ) validParameters[CONFIG_VALUE] = parameter[1];
+                    break;
+            }
+        });
+        allowedParameters.forEach(function (p, index) {
+            if(!~Object.keys(validParameters).indexOf(p)) {
+                switch(index) {
+                    case 0:
+                        validParameters[p] = CONFIG_DEFAULT_PIXEL;
+                        break;
+                    case 1:
+                        validParameters[p] = CONFIG_DEFAULT_CORRECTION;
+                        break;
+                    case 2:
+                        validParameters[p] = CONFIG_DEFAULT_VALUE;
+                        break;
+                }
+            }
+        });
+        console.log('QR code configuration\n' + JSON.stringify(validParameters));
+        return validParameters;
     };
     (function init() {
-        if (hashString.length > 1) {
-            document.querySelector('[name="msg"]').value = decodeURIComponent(
-                hashString.slice(1)
-            );
-            update_qrcode();
-        };
-        document.querySelector('form').addEventListener('submit', function (e) {
+        parseFragment(hashString);
+        elemValue.value = validParameters.value;
+        updateQRCode();
+        elemForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            var text = document.forms[0].elements['msg'].value.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+            debugger;
+            var text = elemValue.value.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
             if (text.length > 0) {
                 location.hash = encodeURIComponent(text);
-                qr_element.innerHTML = create_qrcode(text);
+                elemQRCode.innerHTML = createQRCode(text);
             }
         });
     })();
