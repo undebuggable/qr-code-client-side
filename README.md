@@ -26,6 +26,6 @@ The percent-encoded value to encode:
 Examples
 -------------
 
-An example URL the this application with all parameters:
+An example URL to and instance of this application with all parameters set:
 
 [https://ow.cx/static/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side](https://ow.cx/static/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side)
