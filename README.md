@@ -1,4 +1,4 @@
-Generate QR code entirely on the client side, in the web browser.
+Generate QR code entirely on the client side, in the web browser
 ===============================================
 
 Introduction
