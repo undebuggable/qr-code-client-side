@@ -30,4 +30,4 @@ Examples
 
 An example URL to and instance of this application with all parameters set:
 
-[https://ow.cx/static/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side](https://ow.cx/static/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side)
+[https://static.ow.cx/qr-code-client-side/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side](https://static.ow.cx/qr-code-client-side/qr.html#pixel=5&correction=L&value=https%3A%2F%2Fgithub.com%2Fundebuggable%2Fqr-code-client-side)
